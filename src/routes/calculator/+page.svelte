@@ -1,5 +1,6 @@
 <script>
   //This will be the script for the Calculator
+  import { calculatorService } from "../../services/CalculatorService"
 
   //Variables for the Calculator
   let firstValue = "";
@@ -15,8 +16,9 @@
     if (operation != "") {
       secondValue += value;
       console.log(secondValue);
+    } else {
+      firstValue += value;
     }
-    firstValue += value;
     displayValue = `${firstValue} ${operation} ${secondValue}`;
   }
 
@@ -39,30 +41,38 @@
     }
   }
   
-  function performOperation(firstValue, secondValue, operation) {
+  async function performOperation(firstValue, secondValue, operation) {
     //This can be replaced by the REST API SSR
     //We could just get the response values
-    switch (operation) {
-      case "+":
-        // Perform addition operation
-        answer = parseFloat(firstValue) + parseFloat(secondValue)
-        break;
-      case "-":
-        // Perform subtraction operation
-        answer = parseFloat(firstValue) - parseFloat(secondValue)
-        break;
-      case "*":
-        // Perform multiplication operation
-        answer = parseFloat(firstValue) * parseFloat(secondValue)
-        break;
-      case "÷":
-        // Perform division operation
-        answer = parseFloat(firstValue) / parseFloat(secondValue)
-        break;
-      default:
-        // Error, without Operator
-        handleInvalidOperation();
-        break;
+    // switch (operation) {
+    //   case "+":
+    //     // Perform addition operation
+    //     answer = parseFloat(firstValue) + parseFloat(secondValue)
+    //     break;
+    //   case "-":
+    //     // Perform subtraction operation
+    //     answer = parseFloat(firstValue) - parseFloat(secondValue)
+    //     break;
+    //   case "*":
+    //     // Perform multiplication operation
+    //     answer = parseFloat(firstValue) * parseFloat(secondValue)
+    //     break;
+    //   case "÷":
+    //     // Perform division operation
+    //     answer = parseFloat(firstValue) / parseFloat(secondValue)
+    //     break;
+    //   default:
+    //     // Error, without Operator
+    //     handleInvalidOperation();
+    //     break;
+    // }
+    if(operation == ""){
+      // Error, without Operator
+      handleInvalidOperation();
+    } else {
+      await calculatorService.performCalculation(displayValue).then((response) => {
+        answer = response.result
+      })
     }
   }
 
