@@ -27,6 +27,7 @@
       alert("Enter Values First");
     } else {
       operation = value;
+      console.log(operation)
     }
     displayValue = `${firstValue} ${operation} ${secondValue}`;
   }
@@ -65,14 +66,28 @@
     //     // Error, without Operator
     //     handleInvalidOperation();
     //     break;
-    // }
+    // }2
     if(operation == ""){
       // Error, without Operator
       handleInvalidOperation();
     } else {
-      await calculatorService.performCalculation(displayValue).then((response) => {
-        answer = response.result
-      })
+      // For Rest API from a different Server
+      // await calculatorService.performCalculation(displayValue).then((response) => {
+      //   answer = response.result
+      // })
+
+      // For +server.js svelte application
+      const response = await fetch('/api/calculator', {
+        method: 'POST',
+        body: JSON.stringify({firstValue, secondValue, operation}),
+        headers: {
+          'content-type' : 'application/json'
+        }
+      });
+
+      console.log(response)
+
+      answer = await response.json()
     }
   }
 
@@ -124,7 +139,7 @@
       <td class="clear" on:click={() => allClear()}>A C</td>
       <td class="btn" on:click={() => changeSign()}>+/-</td>
       <td class="btn" on:click={() => percentValue()}>&nbsp;%&nbsp</td>
-      <td class="operator" on:click={() => onOperatorClick("÷")}>÷</td>
+      <td class="operator" on:click={() => onOperatorClick("/")}>÷</td>
     </tr>
     <tr>
       <td class="btn" on:click={() => onButtonClick("7")}>7</td>
